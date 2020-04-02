@@ -41,11 +41,16 @@ def full():
 
     # Should create a link between full URL/shortened URL
     if request.method == 'POST':
-        long_url = request.form.get('url')
+        full_url = request.form.get('url')
 
         #  REGEX check for valid URL
         if not URL_RE.match(long_url):
             return 'URL posted is not a valid URL', 400
+
+        #  Check if an existing shortened URL was found and return it
+        for key, value in url_map.items()
+            if value == long_url:
+                return 'Shortened URL already existed: {}'.format(escape(key))
 
         # generate new short URL and save it in memory
         new_url = generate_short_url()
@@ -55,7 +60,16 @@ def full():
 
     # Should delete a link between full URL/shortened URL
     if request.method == 'DELETE':
-        return 'Removed URL LINK', 204
+        full_url = request.form.get('url')
+
+        # Check if a match is found, if so delete
+        for key, value in url_map.items():
+            if full_url == value:
+                del url_map[key]
+                return 'Removed {} -> {} from memory'.format(key, value), 204
+
+        # No links were found matchin the full URL
+        return 'Did not found a link containing this URL', 404
 
 @app.route('/<id>', methods=['GET', 'PUT', 'DELETE'])
 def shortened(id):
@@ -68,13 +82,20 @@ def shortened(id):
         # Error if not found
         return 'Did not find URL link', 404
 
-    # Should delete a link between full URL/shortened URL
+    # TODO: How should it update?
     if request.method == 'PUT':
-        new_url = generate_short_url()
-        return 'Shortened URL: {}'.format(escape(new_url))
+        return 'PUT REQUEST URL: {}'.format(escape(id))
 
     # Should delete a link between full URL/shortened URL
     if request.method == 'DELETE':
+        # Check if a match is found, if so delete
+        for key, value in url_map.items():
+            if id == key:
+                del url_map[key]
+                return 'Removed {} -> {} from memory'.format(key, value), 204
+
+        # No links were found matchin the full URL
+        return 'Did not found a link containing this URL', 404
         return 'Shortened URL: {}'.format(escape(id))
 
 

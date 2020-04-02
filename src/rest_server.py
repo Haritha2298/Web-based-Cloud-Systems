@@ -103,4 +103,4 @@ def shortened(id):
 
 
 if __name__ == '__main__':
-    app.run(debug=DEBUG, port=int(PORT))
+    app.run(debug=DEBUG, port=int(PORT), host='0.0.0.0')

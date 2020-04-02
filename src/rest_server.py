@@ -47,17 +47,17 @@ def full():
         full_url = request.form.get('url')
 
         #  REGEX check for valid URL
-        if not URL_RE.match(long_url):
+        if not URL_RE.match(full_url):
             return 'URL posted is not a valid URL', 400
 
         #  Check if an existing shortened URL was found and return it
-        for key, value in url_map.items()
-            if value == long_url:
+        for key, value in url_map.items():
+            if full_url == value:
                 return 'Shortened URL already existed: {}'.format(escape(key))
 
         # generate new short URL and save it in memory
         new_url = generate_short_url()
-        url_map[new_url] = long_url
+        url_map[new_url] = full_url
 
         return 'Shortened URL: {}'.format(escape(new_url))
 

@@ -6,20 +6,23 @@ import re
 from flask import Flask, request, redirect, Response, jsonify
 from markupsafe import escape
 
+# https://www.regextester.com/93652
 URL_RE = re.compile('^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$')
 
 DEBUG = True
 PORT = 5000
 
+# Env var to set port used for more customisability during containerisation
 if os.environ.get('FLASK_PORT') is not None:
     PORT = int(os.environ.get('FLASK_PORT'))
 
+# Debug logging purposes
 if os.environ.get('FLASK_ENV') is not None and os.environ.get('FLAS_ENV') == 'PROD':
     DEBUG = False
 
 app = Flask(__name__)
 
-
+# Contains the key-value storage of links
 url_map = {}
 
 # Helper function to generate a random shortened url given size

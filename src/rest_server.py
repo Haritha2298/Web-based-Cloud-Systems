@@ -53,13 +53,13 @@ def full():
         #  Check if an existing shortened URL was found and return it
         for key, value in url_map.items():
             if full_url == value:
-                return 'Shortened URL already existed: {}'.format(escape(key), 201)
+                return 'Shortened URL already existed: {}',format(escape(key)), 201
 
         # generate new short URL and save it in memory
         new_url = generate_short_url()
         url_map[new_url] = full_url
 
-        return 'Shortened URL: {}'.format(escape(new_url), 201)
+        return 'Shortened URL: {}'.format(escape(new_url)), 201
 
     # Should delete a link between full URL/shortened URL
     if request.method == 'DELETE':
@@ -103,7 +103,7 @@ def shortened(id):
                 url_map[key] = full_url
                 return 'Updated link {} -> {} from memory'.format(key, value), 200
 
-        return 'PUT REQUEST URL: {}'.format(escape(id))
+        return 'PUT REQUEST URL: {}'.format(escape(id)), 200
 
     # Should delete a link between full URL/shortened URL
     if request.method == 'DELETE':

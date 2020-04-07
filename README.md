@@ -30,31 +30,31 @@ Python was chosen as language for Assignment 1 so we chose flask to build the se
 
 **/**
 
-GET -> Display all the links within the webservice
-    - Results in a list of links between full URLs and shortened URLs
+GET -> Display all the links within the webservice.<br/>
+    - Results in a list of links between full URLs and shortened URLs.<br/>
 
-POST -> Allow the user to post a **url** (form encoded) to the server to create a short link, accepts the **url** form encoded value as data.
-    - 201 -> OK, response contains shortened URL
-    - 400 -> URL posted is not a valid URL
+POST -> Allow the user to post a **url** (form encoded) to the server to create a short link, accepts the **url** form encoded value as data.<br/>
+    - 201 -> OK, response contains shortened URL.<br/>
+    - 400 -> URL posted is not a valid URL.<br/>
 
-DELETE -> Allows the user to delete a **url** link from the server, accepts the **url** form encoded value as data.
-    - 204 -> Succefully deleted a link
-    - 404 -> Could not find a link associated with the **url**
+DELETE -> Allows the user to delete a **url** link from the server, accepts the **url** form encoded value as data.<br/>
+    - 204 -> Succefully deleted a link.<br/>
+    - 404 -> Could not find a link associated with the **url**.<br/>
 
 **/:id**
 
-GET -> Redirects the user to the original URL behind the shortened URL
-    - 301 -> Succesful redirect
-    - 404 -> Could not find a link for the specified shortened URL
+GET -> Redirects the user to the original URL behind the shortened URL<br/>
+    - 301 -> Succesful redirect.<br/>
+    - 404 -> Could not find a link for the specified shortened URL.<br/>
     
-PUT -> Update or create a link for the specified shortened URL, accepts the **url** form encoded value as data.
-    - 400 -> Invalid **url** specified
-    - 404 -> Shortened URL not found
-    - 200 -> Succesfully updated URL
+PUT -> Update or create a link for the specified shortened URL, accepts the **url** form encoded value as data.<br/>
+    - 400 -> Invalid **url** specified.<br/>
+    - 404 -> Shortened URL not found.<br/>
+    - 200 -> Succesfully updated URL.<br/>
     
-DELETE -> Allows the user to delete a **url** link from the server, accepts the **url** form encoded value as data. 
-    - 204 -> Succefully deleted a link
-    - 404 -> Could not find a link associated with the **url**
+DELETE -> Allows the user to delete a **url** link from the server, accepts the **url** form encoded value as data. <br/>
+    - 204 -> Succefully deleted a link.<br/>
+    - 404 -> Could not find a link associated with the passed **url**.<br/>
 
 
 The implementation of the flask REST server is able to serve multiple users already, since the links between the shortened and original URLs are stored in memory on the server. Doing it this way the every user is able to access shortened URLs created by other users.

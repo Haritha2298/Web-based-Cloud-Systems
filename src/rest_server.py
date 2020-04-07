@@ -53,13 +53,13 @@ def full():
         #  Check if an existing shortened URL was found and return it
         for key, value in url_map.items():
             if full_url == value:
-                return 'Shortened URL already existed: {}',format(escape(key)), 201
+                return 'Shortened URL already existed: /{}'.format(key), 201
 
         # generate new short URL and save it in memory
         new_url = generate_short_url()
         url_map[new_url] = full_url
 
-        return 'Shortened URL: {}'.format(escape(new_url)), 201
+        return 'Shortened URL: /{}'.format(new_url), 201
 
     # Should delete a link between full URL/shortened URL
     if request.method == 'DELETE':
@@ -69,10 +69,10 @@ def full():
         for key, value in url_map.items():
             if full_url == value:
                 del url_map[key]
-                return 'Removed {} -> {} from memory'.format(key, value), 204
+                return 204
 
         # No links were found matchin the full URL
-        return 'Did not found a link containing this URL', 404
+        return 'Did not found a link containing the URL: {}'.format(full_url), 404
 
 @app.route('/<id>', methods=['GET', 'PUT', 'DELETE'])
 def shortened(id):
@@ -83,7 +83,7 @@ def shortened(id):
             return redirect(url_map[id])
 
         # Error if not found
-        return 'Did not find URL link', 404
+        return 'Could not find a matching URL for the provided shortened URL /{}'.format(id), 404
 
     # idem potent update of short url
     if request.method == 'PUT':
@@ -91,7 +91,7 @@ def shortened(id):
 
         # Couldn't find a link
         if id not in url_map:
-            return 'Shortened URL not found', 404
+            return 'Could not find a matching URL for the provided shortened URL /{}'.format(id), 404
 
         #  REGEX check for valid URL
         if not URL_RE.match(full_url):
@@ -101,20 +101,20 @@ def shortened(id):
         for key, value in url_map.items():
             if id == key:
                 url_map[key] = full_url
-                return 'Updated link {} -> {} from memory'.format(key, value), 200
-
-        return 'PUT REQUEST URL: {}'.format(escape(id)), 200
+                return 'Updated link {} -> {} to {} -> {}'.format(key, value, key, full_url), 200
 
     # Should delete a link between full URL/shortened URL
     if request.method == 'DELETE':
+        # Couldn't find a link
+        if id not in url_map:
+            return 'Could not find a matching URL for the provided shortened URL /{}'.format(id), 404
+
         # Check if a match is found, if so delete
         for key, value in url_map.items():
             if id == key:
                 del url_map[key]
-                return 'Removed {} -> {} from memory'.format(key, value), 204
+                return 204
 
-        # No links were found matchin the full URL
-        return 'Did not found a link containing this URL', 404
 
 if __name__ == '__main__':
     app.run(debug=DEBUG, port=int(PORT), host='0.0.0.0')

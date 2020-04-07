@@ -19,10 +19,9 @@ $ pip install -r requirements.txt
 $ python src/rest_server.py
 ```
 
-Optionally you can specify the **FLASK_PORT** environment variable to set the port on which the server will be running.
+Optionally you can set the **FLASK_PORT** environment variable to set the port on which the server will be running.
 
-
-In order to use the API it is advised to use curl or postman in order to send the HTTP requests to the server. If you are using a POST or PUT request to the server be sure to include **url** as form-encoded data parameter in order for the server to correctly process the request.
+In order to use the API it is advised to use [curl](https://curl.haxx.se/) or [Postman](https://www.postman.com/) in order to send the HTTP requests to the server. If you are using a POST or PUT request to the server be sure to include **url** as form-encoded data parameter in order for the server to correctly process the request.
 
 
 ## Implementation
@@ -57,7 +56,7 @@ DELETE -> Allows the user to delete a **url** link from the server, accepts the 
     - 404 -> Could not find a link associated with the passed **url**.<br/>
 
 
-The implementation of the flask REST server is able to serve multiple users already, since the links between the shortened and original URLs are stored in memory on the server. Doing it this way the every user is able to access shortened URLs created by other users.
+The implementation of the flask REST server is able to serve multiple users, since the links between the shortened and original URLs are stored in memory on the server. Doing it this way the every user is able to access shortened URLs created by other users. This implementation choice was made since it was a simple solution to create a standalone service which also contains the data it needs to operate.
 
 
 ## How to implement a URL-shortener for multiple users?

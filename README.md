@@ -7,7 +7,8 @@
 
 2. Use PIP to install the python depencies
 ```sh
-$ pip install -r requirements.txt
+$ pip install ladon
+$ pip install zeep
 ```
 
 3. Run the flask server using python

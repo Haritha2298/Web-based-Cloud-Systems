@@ -1,5 +1,22 @@
 # Web-based-Cloud-Systems
+# 1.1 - Webservice - SOAP
+. Download Python
+[Download Python](https://www.python.org/downloads/)
 
+2. Use PIP to install the python depencies
+```sh
+$ pip install -r requirements.txt
+```
+
+3. Run the flask server using python
+```sh
+$ python runserver.py
+```
+4.Now on another python command prompt run the client for the service.
+```sh
+$ python client.py
+```
+This will print the results of the different arithmetic operations performed by the calculator.
 
 # 1.2 - RESTFUL Service
 

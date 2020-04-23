@@ -4,6 +4,11 @@ import os
 import re
 
 from flask import Flask, request, redirect, Response, jsonify
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity, set_access_cookies
+)
+
 from markupsafe import escape
 
 # https://www.regextester.com/93652
@@ -22,8 +27,23 @@ if os.environ.get('FLASK_ENV') is not None and os.environ.get('FLAS_ENV') == 'PR
 
 app = Flask(__name__)
 
-# Contains the key-value storage of links
-url_map = {}
+app.config['JWT_SECRET_KEY'] = 'default_secret_key'
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+
+# JWT Secret 
+if os.environ.get('FLASK_JWT_SECRET') is not None:
+    app.config['SECRET_KEY'] = os.environ.get('FLASK_JWT_SECRET')
+
+jwt = JWTManager(app)
+
+url_map = {} # Contains the key-value storage of links short urls/full urls
+users = {} # Contains the key-value storage of users/passwords
+
+def authenticate(username, password):
+    user = username_table.get(username, None)
+    if user and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
+        return user
+
 
 # Helper function to generate a random shortened url given size
 def generate_short_url(url_length=6):
@@ -35,6 +55,54 @@ def generate_short_url(url_length=6):
         return generate_short_url()
 
     return url
+
+# CREATE ACCOUNT
+@app.route('/users', methods=['POST'])
+def create_account():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    if not username:
+        return jsonify({"message": "Missing username parameter"}), 400
+
+    if not password:
+        return jsonify({"message": "Missing password parameter"}), 400
+
+    if username in users:
+        return jsonify({"message": "User already exists"}), 301
+
+    # Create user
+    users[username] = password
+    print("Created user {} with password {}".format(username, password))
+    return jsonify({"message": "Created new user", "username": username, "password": password}), 301
+
+# LOGIN
+@app.route('/users/login', methods=['POST'])
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    if not username:
+        return jsonify({"message": "Missing username parameter"}), 400
+
+    if not password:
+        return jsonify({"message": "Missing password parameter"}), 400
+
+    if username in users:
+        # If password maches set a cookie containing the JWT token and return HTTP 200
+        if users[username] == password:
+
+            access_token = create_access_token(identity=username)
+            response = jsonify({"message": "Logged in!", "User": username})
+            set_access_cookies(response, access_token)
+
+            return response, 200
+        
+        # If the password does not match for the user return HTTP unauthorized
+        else:
+            return jsonify({"message": "Invalid password"}), 403
+
+    return jsonify({"message": "User nor found"}), 403
 
 @app.route('/', methods=['GET', 'POST', 'DELETE'])
 def full():

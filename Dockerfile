@@ -12,6 +12,10 @@ COPY --from=build-env /app /app
 COPY --from=build-env /usr/local/lib/python3.5/site-packages /usr/local/lib/python3.5/site-packages
 
 WORKDIR /app
+
 ENV PYTHONPATH=/usr/local/lib/python3.5/site-packages
+ENV FLASK_JWT_SECRET=super_secret_default
+ENV FLASK_ENV=prod
+ENV FLASK_PORT=5000
 
 CMD ["rest_server.py"]

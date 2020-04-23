@@ -9,7 +9,6 @@ from flask_jwt_extended import (
     get_jwt_identity, set_access_cookies
 )
 
-from markupsafe import escape
 
 # https://www.regextester.com/93652
 URL_RE = re.compile('^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$')
@@ -38,11 +37,6 @@ jwt = JWTManager(app)
 
 url_map = {} # Contains the key-value storage of links short urls/full urls
 users = {} # Contains the key-value storage of users/passwords
-
-def authenticate(username, password):
-    user = username_table.get(username, None)
-    if user and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
-        return user
 
 
 # Helper function to generate a random shortened url given size

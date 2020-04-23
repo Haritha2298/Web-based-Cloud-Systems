@@ -63,13 +63,13 @@ def create_account():
     if not password:
         return jsonify({"message": "Missing password parameter"}), 400
 
+    # User already exists HTTP 409 Confict statuscode
     if username in users:
-        return jsonify({"message": "User already exists"}), 301
+        return jsonify({"message": "User already exists"}), 409
 
     # Create user
     users[username] = password
-    print("Created user {} with password {}".format(username, password))
-    return jsonify({"message": "Created new user", "username": username, "password": password}), 301
+    return jsonify({"message": "Created new user", "username": username, "password": password}), 200
 
 # LOGIN
 @app.route('/users/login', methods=['POST'])
@@ -88,12 +88,9 @@ def login():
         if users[username] == password:
 
             access_token = create_access_token(identity=username)
-            response = jsonify({"message": "Logged in!", "User": username})
-            set_access_cookies(response, access_token)
-
-            return response, 200
+            return set_access_cookies(jsonify({"message": "Logged in!", "User": username}), access_token), 200
         
-        # If the password does not match for the user return HTTP unauthorized
+        # If the password does not match for the user return HTTP unauthorized 403
         else:
             return jsonify({"message": "Invalid password"}), 403
 
@@ -101,13 +98,13 @@ def login():
 
 
 @app.route('/', methods=['GET'])
-def get_all():
+def get_all_links():
     if request.method == 'GET':
         return jsonify(url_map), 200
 
 @app.route('/', methods=['POST', 'DELETE'])
 @jwt_required
-def full():
+def create_delete_links():
     full_url = request.form.get('url')
     if not full_url:
         return jsonify({"message": "Missing url parameter"}), 400

@@ -140,7 +140,7 @@ def create_delete_links():
 
 @app.route('/<id>', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required
-def shortened(id):
+def shortened_url(id):
     # Check if shortened URL is available and redirect
     if request.method == 'GET':
         # Redirect
